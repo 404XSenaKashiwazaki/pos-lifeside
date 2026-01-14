@@ -228,7 +228,7 @@ export const formProfileSchema = z.object({
   address: z.string().min(1, { message: "Alamat wajib di isi." }),
   // image: z.union([z.file(), z.string()]).optional(),
   image: z
-    .union([z.instanceof(File), z.string(), z.null()])
+    .union([z.instanceof(File), z.string(), z.undefined()])
     .optional()
     .transform((val) => {
       if (val === "" || val === null) return undefined;

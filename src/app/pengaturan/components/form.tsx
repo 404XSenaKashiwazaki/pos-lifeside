@@ -54,16 +54,18 @@ const FormPage = ({
 
   const { setOpen } = useSheet();
   const [loading, setLoading] = useState(false);
-  const form = useForm<z.infer<typeof formProfileSchema>>({
+  const form =useForm<z.input<typeof formProfileSchema>>({
     resolver: zodResolver(formProfileSchema),
     defaultValues: {
       address,
       phone,
-      image,
+      image: undefined,
+      imageUrl,
+
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof formProfileSchema>) => {
+  const onSubmit = async (values: z.input<typeof formProfileSchema>) => {
     const formData = new FormData();
     if (!id) return;
     formData.append("phone", JSON.stringify(values.phone));
