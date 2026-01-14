@@ -54,14 +54,12 @@ const FormPage = ({
 
   const { setOpen } = useSheet();
   const [loading, setLoading] = useState(false);
-  const form =useForm<z.input<typeof formProfileSchema>>({
+  const form = useForm<z.input<typeof formProfileSchema>>({
     resolver: zodResolver(formProfileSchema),
     defaultValues: {
       address,
       phone,
-      image: undefined,
-      imageUrl,
-
+      image,
     },
   });
 

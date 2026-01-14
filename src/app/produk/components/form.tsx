@@ -55,7 +55,7 @@ const FormPage = ({
   const [preview, setPreview] = useState<string | null>(fileUrl ?? null);
   const [loading, setLoading] = useState(false);
   const { setOpen } = useModal();
-  const form = useForm<z.infer<typeof formProductSchema>>({
+  const form = useForm<z.input<typeof formProductSchema>>({
     resolver: zodResolver(formProductSchema),
     defaultValues: {
       name: name ?? "",
@@ -69,7 +69,7 @@ const FormPage = ({
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof formProductSchema>) => {
+  const onSubmit = async (values: z.input<typeof formProductSchema>) => {
     const formData = new FormData();
     formData.append("name", values.name);
     formData.append("color", values.color);

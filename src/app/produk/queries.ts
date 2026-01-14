@@ -8,7 +8,11 @@ import { Product, Size } from "@prisma/client";
 
 export const getData= async (): Promise<Response<Product[]>> => {
   try {
-    const res = await prisma.product.findMany();
+    const res = await prisma.product.findMany({
+      orderBy: {
+        id: "desc"
+      }
+    });
     if (!res)
       return sendResponse({
         success: false,

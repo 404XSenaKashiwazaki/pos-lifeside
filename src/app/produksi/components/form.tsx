@@ -76,7 +76,7 @@ const FormPage = ({
   currentDate.setDate(currentDate.getDate() + 15);
   const [loading, setLoading] = useState(false);
   const { setOpen } = useSheet();
-  const form = useForm<z.infer<typeof formProductionSchema>>({
+  const form = useForm<z.input<typeof formProductionSchema>>({
     resolver: zodResolver(formProductionSchema),
     defaultValues: {
       orderItemId: orderItemId,
@@ -92,7 +92,7 @@ const FormPage = ({
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof formProductionSchema>) => {
+  const onSubmit = async (values: z.input<typeof formProductionSchema>) => {
     const formData = new FormData();
     formData.append("assignedToId", values.assignedToId);
     formData.append("orderItemId", values.orderItemId);
