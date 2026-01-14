@@ -338,7 +338,7 @@ export const formSiteSchema = z.object({
     .string()
     .min(1, "Nama aplikasi wajib di isi.")
     .max(20, "Nama aplikasi maksimal 20 karakter"),
-  fileName: z
+  filename: z
     .union([z.instanceof(File), z.string(), z.null()])
     .optional()
     .transform((val) => {

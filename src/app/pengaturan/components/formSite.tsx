@@ -54,7 +54,7 @@ const FormSite: React.FC<FormSiteProps> = ({
     resolver: zodResolver(formSiteSchema),
     defaultValues: {
       name: name ?? "",
-      fileName: filename ?? "",
+      filename: filename ?? "",
       address: address ?? "",
       email: email ?? "",
       phone: phone ?? "",
@@ -66,7 +66,7 @@ const FormSite: React.FC<FormSiteProps> = ({
     // Object.entries(values).forEach(([e, val]) => formData.append(e, val));
 
     Object.entries(values).forEach(([key, val]) => {
-      if (key === "fileName") {
+      if (key === "filename") {
         if (val instanceof File) {
           formData.append(key, val);
         }
@@ -168,7 +168,7 @@ const FormSite: React.FC<FormSiteProps> = ({
           <div className="flex flex-col items-start gap-1">
             <FormField
               control={form.control}
-              name="fileName"
+              name="filename"
               disabled={loading}
               render={({ field }) => (
                 <FormItem className="w-full">
@@ -210,8 +210,10 @@ const FormSite: React.FC<FormSiteProps> = ({
                   <Image
                     src={preview ?? previewImg}
                     alt="Preview desain file"
-                    width={500}
-                    height={500}
+                    width={100}
+                    height={100}
+                    priority
+                    className="w-52 h-52"
                   />
                 </div>
               </CardContent>

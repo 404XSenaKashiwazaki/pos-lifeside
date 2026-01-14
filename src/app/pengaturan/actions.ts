@@ -28,7 +28,7 @@ export const storeSite = async (
       error: parseData.error,
     });
   const { data } = parseData;
-  const file = formdata.get("image") as File | null;
+  const file = formdata.get("filename") as File | null;
   let fileName = "";
   let fileUrl = "";
   const dataInDb = await prisma.site.findFirst();
@@ -41,7 +41,7 @@ export const storeSite = async (
   } else {
     if (file instanceof File) {
       const filePath = getFilePath(dataInDb?.fileProofUrl ?? "");
-      const fileUpload = await uploadFile(file, "sites");
+      const fileUpload = await uploadFile(file, "site");
       fileName = fileUpload.fileName;
       fileUrl = fileUpload.fileUrl;
 
