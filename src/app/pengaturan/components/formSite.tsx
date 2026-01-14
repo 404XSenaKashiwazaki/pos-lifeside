@@ -35,30 +35,49 @@ interface FormSiteProps {
   name?: string;
   filename?: string;
   fileUrl?: string;
-  email?:string
-  address?:string
-  phone?:string
+  email?: string;
+  address?: string;
+  phone?: string;
 }
-const FormSite: React.FC<FormSiteProps> = ({ name, filename, fileUrl, address,email,phone }) => {
-  const [preview, setPreview] = useState<string | null>(
-    fileUrl ?? null
-  );
+const FormSite: React.FC<FormSiteProps> = ({
+  name,
+  filename,
+  fileUrl,
+  address,
+  email,
+  phone,
+}) => {
+  const [preview, setPreview] = useState<string | null>(fileUrl ?? null);
   const [loading, setLoading] = useState(false);
   const { setOpen } = useSheet();
-  const form = useForm<z.infer<typeof formSiteSchema>>({
+  const form = useForm<z.input<typeof formSiteSchema>>({
     resolver: zodResolver(formSiteSchema),
     defaultValues: {
       name: name ?? "",
-      filename: filename ?? "",
+      fileName: filename ?? "",
       address: address ?? "",
-      email: email?? "",
-      phone: phone ?? ""
+      email: email ?? "",
+      phone: phone ?? "",
     },
   });
-  const onSubmit = async (values: z.infer<typeof formSiteSchema>) => {
+  const onSubmit = async (values: z.input<typeof formSiteSchema>) => {
     const formData = new FormData();
 
-    Object.entries(values).forEach(([e, val]) => formData.append(e, val));
+    // Object.entries(values).forEach(([e, val]) => formData.append(e, val));
+
+    Object.entries(values).forEach(([key, val]) => {
+      if (key === "fileName") {
+        if (val instanceof File) {
+          formData.append(key, val);
+        }
+        return;
+      }
+
+      if (val !== null && val !== undefined) {
+        formData.append(key, val);
+      }
+    });
+
     try {
       setLoading(true);
       const { success, message, error, data } = await storeSite(formData);
@@ -70,15 +89,14 @@ const FormSite: React.FC<FormSiteProps> = ({ name, filename, fileUrl, address,em
           closeButton: true,
         });
       }
-        
+
       if (error) {
-        console.log({error});
+        console.log({ error });
         toast.error("Ops...");
-        
       }
     } catch (error) {
-      console.log({error});
-      
+      console.log({ error });
+
       toast.error("Ops...");
     } finally {
       setLoading(false);
@@ -110,7 +128,7 @@ const FormSite: React.FC<FormSiteProps> = ({ name, filename, fileUrl, address,em
               </FormItem>
             )}
           />
-           <FormField
+          <FormField
             control={form.control}
             name="email"
             disabled={loading}
@@ -128,7 +146,7 @@ const FormSite: React.FC<FormSiteProps> = ({ name, filename, fileUrl, address,em
               </FormItem>
             )}
           />
-           <FormField
+          <FormField
             control={form.control}
             name="phone"
             disabled={loading}
@@ -146,11 +164,11 @@ const FormSite: React.FC<FormSiteProps> = ({ name, filename, fileUrl, address,em
               </FormItem>
             )}
           />
-          
+
           <div className="flex flex-col items-start gap-1">
             <FormField
               control={form.control}
-              name="filename"
+              name="fileName"
               disabled={loading}
               render={({ field }) => (
                 <FormItem className="w-full">
@@ -199,7 +217,7 @@ const FormSite: React.FC<FormSiteProps> = ({ name, filename, fileUrl, address,em
               </CardContent>
             </Card>
           </div>
-           <FormField
+          <FormField
             control={form.control}
             name="address"
             disabled={loading}
