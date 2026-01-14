@@ -1,0 +1,281 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+' ============================
+'        DATA MASTER
+' ============================
+
+class "Data Pelanggan" {
+  + name : string
+  + phone : string
+  + email : string
+  + address : string
+  + notes : string
+  --
+  + tambah()
+  + edit()
+  + hapus()
+  + detail()
+}
+
+class "Data Metode Pembayaran" {
+  + name : string
+  + no : number
+  + description : string
+  --
+  + tambah()
+  + edit()
+  + hapus()
+  + detail()
+}
+
+class "Data Harga & Jenis" {
+  + name : string
+  + description : string
+  + basePrice : number
+  + pricePerArea : number
+  + pricePerColor : number
+  + baseCost : number
+  + costPerArea : number
+  + costPerColor : number
+  + notes : string
+  + isActive : boolean
+  --
+  + tambah()
+  + edit()
+  + hapus()
+  + detail()
+}
+
+class "Data Produk" {
+  + name : string
+  + fileName : file|string
+  + purchaseCost : number
+  + sellingPrice : number
+  + color : string
+  + stok : number
+  + size : string
+  + notes : string
+  --
+  + tambah()
+  + edit()
+  + hapus()
+  + detail()
+}
+
+class "Data Ukuran Produk" {
+  + name : string
+  + chest : number
+  + length : number
+  + sleeve : number
+  + note : string
+  --
+  + tambah()
+  + edit()
+  + hapus()
+  + detail()
+}
+
+class "Data Users" {
+  + name : string
+  + phone : number
+  + email : string
+  + address : string
+  + role : string
+  --
+  + tambah()
+  + edit()
+  + hapus()
+  + detail()
+}
+
+' ============================
+'       DATA PEMESANAN
+' ============================
+
+class "Data Pemesanan" {
+  + orderNumber : string
+  + customerId : string
+  + handleById : string
+  + createdAt : date
+  + product : string
+  + color : string
+  + unitPrice : number
+  + quantity : number
+  + paymentMethod : string
+  + noPayment : number
+  + totalAmount : number
+  + notes : string
+  + status : string
+  + size : string
+  + filename : file|string
+  + previewUrl : string
+  + productionDue : date
+  + name : string
+  + phone : string
+  + address : string
+  + email : string
+  + sablonTypeId : string
+  + colorCount : number
+  + printArea : number
+  + shippingFee : number
+  + discountAmount : number
+  + printAreas : string
+  --
+  + tambah()
+  + edit()
+  + hapus()
+  + detail()
+  + print()
+}
+
+class "Data Pembayaran" {
+  + orderId : string
+  + amount : number
+  + method : string
+  + status : string
+  + type : string
+  + reference : file|string
+  + amountReturn : number
+  + paidAt : date
+  + notes : string
+  --
+  + tambah()
+  + edit()
+  + hapus()
+  + detail()
+  + print()
+}
+
+class "Data Produksi" {
+  + orderItemId : string
+  + assignedToId : string
+  + sablonTypeId : string
+  + startDate : date
+  + endDate : date
+  + progress : string
+  + status : string
+  + filename : file|string
+  + notes : string
+  --
+  + edit()
+  + detail()
+}
+
+' ============================
+'       DATA PENGATURAN
+' ============================
+
+class "Data Pengaturan Profile" {
+  + phone : number
+  + address : string
+  + image : file|string
+  + imageUrl : string
+  --
+  + edit()
+}
+
+class "Data Pengaturan Situs" {
+  + name : string
+  + filename : file|string
+  + phone : string
+  + email : string
+  + address : string
+  --
+  + edit()
+}
+
+' ============================
+'    ROLE DASHBOARD / ACCESS
+' ============================
+
+class Admin {
+  --
+  Data Dashboard
+  Data Produk
+  Data Ukuran Produk
+  Data Pemesanan
+  Data Pembayaran
+  Data Metode Pembayaran
+  Data Produksi
+  Data Pelanggan
+  Data Harga & Jenis
+  Data Users
+  Data Pengaturan Profile
+  Data Pengaturan Situs
+}
+
+class Staff {
+  --
+  Data Dashboard
+  Data Produk
+  Data Ukuran Produk
+  Data Pemesanan
+  Data Pembayaran
+  Data Produksi
+  Data Pelanggan
+  Data Harga & Jenis
+  Data Pengaturan Profile
+}
+
+class Manager {
+  --
+  Data Dashboard
+  Data Pemesanan
+  Data Pembayaran
+  Data Metode Pembayaran
+  Data Pelanggan
+  Data Harga & Jenis
+  Data Users
+  Data Pengaturan Profile
+  Data Pengaturan Situs
+}
+
+' ============================
+'      RELATIONSHIPS
+' ============================
+
+' --- Role ke Data (TANPA kardinalitas) ---
+Admin --> "Data Produk"
+Admin --> "Data Ukuran Produk"
+Admin --> "Data Pemesanan"
+Admin --> "Data Pembayaran"
+Admin --> "Data Metode Pembayaran"
+Admin --> "Data Produksi"
+Admin --> "Data Pelanggan"
+Admin --> "Data Harga & Jenis"
+Admin --> "Data Users"
+Admin --> "Data Pengaturan Profile"
+Admin --> "Data Pengaturan Situs"
+
+Staff --> "Data Produk"
+Staff --> "Data Ukuran Produk"
+Staff --> "Data Pemesanan"
+Staff --> "Data Pembayaran"
+Staff --> "Data Produksi"
+Staff --> "Data Pelanggan"
+Staff --> "Data Harga & Jenis"
+Staff --> "Data Pengaturan Profile"
+
+Manager --> "Data Pemesanan"
+Manager --> "Data Pembayaran"
+Manager --> "Data Metode Pembayaran"
+Manager --> "Data Pelanggan"
+Manager --> "Data Harga & Jenis"
+Manager --> "Data Users"
+Manager --> "Data Pengaturan Profile"
+Manager --> "Data Pengaturan Situs"
+
+' --- Relasi DATA ke DATA (PAKAI kardinalitas) ---
+"Data Pelanggan" "1" --> "0..*" "Data Pemesanan"
+"Data Users" "1" --> "0..*" "Data Pemesanan"
+"Data Produk" "1" --> "0..*" "Data Pemesanan"
+"Data Harga & Jenis" "1" --> "0..*" "Data Pemesanan"
+
+"Data Pemesanan" "1" --> "1" "Data Pembayaran"
+"Data Metode Pembayaran" "1" --> "0..*" "Data Pembayaran"
+
+"Data Pemesanan" "1" --> "0..1" "Data Produksi"
+
+
+@enduml

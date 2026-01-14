@@ -1,0 +1,56 @@
+@startuml
+actor User
+participant "Aplikasi" as App
+participant "Sistem" as System
+participant "Database" as DB
+
+' === LOGIN ===
+User -> App : Membuka aplikasi
+User -> App : Klik Login
+App -> System : Kirim data login
+System -> DB : Validasi login
+DB --> System : Hasil validasi
+
+alt Login valid
+    System --> App : Akses diterima
+    App -> User : Tampilkan Dashboard
+else Login tidak valid
+    System --> App : Akses ditolak
+    App -> User : Tampilkan error login
+    return
+end
+
+' === MASUK MENU PEMESANAN ===
+User -> App : Pilih menu "Pemesanan"
+App -> System : Request data pemesanan
+System -> DB : Ambil data pemesanan
+DB --> System : Data pemesanan
+System --> App : Kirim data pemesanan
+App -> User : Tampilkan tabel pemesanan
+
+' === TAMBAH PEMESANAN ===
+User -> App : Klik "Tambah Pemesanan"
+App -> User : Tampilkan form tambah pemesanan
+
+User -> App : Isi form + Klik Simpan
+App -> System : Kirim data pemesanan baru
+System -> System : Validasi data
+
+alt Data valid
+    System -> DB : Simpan data pemesanan
+    DB --> System : Konfirmasi simpan
+    System --> App : Pesan berhasil
+    App -> User : Tampilkan pesan berhasil
+else Data tidak valid
+    System --> App : Pesan error
+    App -> User : Tampilkan error & kembali ke form
+end
+
+' === UPDATE TABEL PEMESANAN ===
+App -> System : Request data pemesanan terbaru
+System -> DB : Ambil data terbaru
+DB --> System : Data terbaru
+System --> App : Kirim data terbaru
+App -> User : Tampilkan tabel pemesanan terbaru
+
+@enduml

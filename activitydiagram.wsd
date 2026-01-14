@@ -1,0 +1,37 @@
+@startuml
+start
+
+:User membuka aplikasi;
+:Login;
+
+if (Login valid?) then (Ya)
+    :Tampilkan Dashboard;
+else (Tidak)
+    :Tampilkan error login;
+    detach
+endif
+
+:Memilih menu "Pemesanan";
+:Tampilkan halaman pemesanan (tabel data);
+
+:Klik tombol "Tambah Pemesanan";
+:Tampilkan form tambah data pemesanan;
+
+repeat
+    :User mengisi form;
+    :Klik Simpan;
+
+    if (Data valid?) then (Valid)
+        :Simpan data pemesanan ke database;
+        :Tampilkan pesan berhasil;
+        break
+    else (Tidak valid)
+        :Tampilkan pesan error;
+    endif
+repeat while (Perbaiki data?)
+
+:Tampilkan tabel pemesanan terbaru;
+
+stop
+
+@enduml

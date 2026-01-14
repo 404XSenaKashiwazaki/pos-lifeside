@@ -1,0 +1,40 @@
+@startuml
+start
+
+:Customer datang ke tempat sablon;
+:Customer memilih desain / membawa desain sendiri;
+
+if (Desain sesuai?) then (Ya)
+    :Catat pesanan (jumlah, ukuran, warna kaos, jenis sablon);
+else (Tidak)
+    :Lakukan revisi desain bersama customer;
+    :Desain disetujui;
+    :Catat pesanan (jumlah, ukuran, warna kaos, jenis sablon);
+endif
+
+:Hitung harga pesanan;
+:Customer melakukan pembayaran DP / pelunasan;
+
+:Siapkan bahan (kaos, tinta, screen);
+:Siapkan desain untuk pembuatan film / afdruk;
+
+:Proses afdruk screen;
+:Siapkan meja sablon & alignment desain;
+
+:Mulai proses sablon kaos satu per satu;
+
+if (Hasil sablon sesuai?) then (Ya)
+    :Proses pengeringan tinta;
+else (Tidak)
+    :Perbaikan atau ulang sablon;
+endif
+
+:Setrika / finishing kaos;
+:Quality Control final;
+
+:Hubungi customer untuk pengambilan pesanan;
+:Penyerahan pesanan ke customer;
+:Customer melunasi pembayaran (jika sebelumnya DP);
+
+stop
+@enduml

@@ -1,0 +1,49 @@
+@startuml
+start
+
+:User login;
+if (Login valid?) then (Ya)
+    :Masuk Dashboard;
+else (Tidak)
+    :Error login;
+    stop
+endif
+
+partition "Data Master" {
+    :Kelola Produk (CRUD);
+    :Kelola Ukuran (CRUD);
+    :Kelola Harga & Jenis Sablon;
+    :Kelola Pelanggan;
+    :Kelola Users & Role;
+}
+
+partition "Pemesanan" {
+    :Kelola Pesanan (produk, ukuran, qty, sablon);
+    :Kelola Metode Pembayaran;
+    if (Pembayaran masuk?) then (Ya)
+        :Input pembayaran / upload bukti;
+    else (Belum)
+        :Status pending;
+    endif
+}
+
+partition "Produksi" {
+    :Lihat pesanan siap produksi;
+    if (Pesanan valid?) then (Ya)
+        :Proses produksi & QC;
+        :Update status produksi;
+    endif
+}
+
+partition "Pelaporan" {
+    :Laporan penjualan / produksi / keuangan;
+    :Export PDF/Excel;
+}
+
+partition "Pengaturan" {
+    :Update profil toko, logo, kontak, sistem;
+}
+
+:User logout;
+stop
+@enduml

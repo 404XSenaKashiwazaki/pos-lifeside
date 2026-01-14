@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Order" ALTER COLUMN "noPayment" SET DATA TYPE BIGINT;

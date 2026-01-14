@@ -1,0 +1,27 @@
+@startuml
+actor User
+participant "Aplikasi" as App
+participant "Google OAuth" as Google
+participant "Sistem" as System
+participant "Database" as DB
+
+User -> App : Membuka aplikasi
+User -> App : Klik "Login dengan Google"
+
+App -> Google : Redirect ke Google OAuth
+Google -> User : Tampilkan halaman izin akses\n(Akun Google)
+
+User -> Google : Pilih akun & Beri izin
+Google --> App : Kirim Authorization Code
+
+App -> System : Kirim Authorization Code
+System -> Google : Request Access Token
+Google --> System : Access Token + User Info
+
+System -> DB : Validasi/Registrasi user\n(Cari user berdasarkan email Google)
+DB --> System : Data user ditemukan / baru dibuat
+
+System --> App : Login berhasil
+App -> User : Tampilkan Dashboard
+
+@enduml

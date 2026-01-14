@@ -1,0 +1,363 @@
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id            String          @id @default(cuid())
+  name          String?
+  username      String?         @unique
+  email         String?         @unique
+  emailVerified DateTime?
+  image         String?
+  imageUrl      String?
+  phone         BigInt?
+  address       String?
+  accounts      Account[]
+  sessions      Session[]
+  Authenticator Authenticator[]
+  role          UserRole  @default(STAFF)
+  createdOrders Order[]   @relation("OrderCreatedBy")
+  handledOrders Order[]   @relation("OrderHandledBy")
+  upload        Design[]
+  payments       Payment[]
+  actor         OrderLog[]
+  production    Production[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Account {
+  id                       String  @id @default(cuid())
+  userId                   String  @unique
+  type                     String
+  provider                 String
+  providerAccountId        String
+  refresh_token            String?
+  access_token             String?
+  expires_at               Int?
+  token_type               String?
+  scope                    String?
+  id_token                 String?
+  session_state            String?
+  refresh_token_expires_in Int?
+  user                     User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Authenticator {
+  credentialID         String  @unique
+  userId               String
+  providerAccountId    String
+  credentialPublicKey  String
+  counter              Int
+  credentialDeviceType String
+  credentialBackedUp   Boolean
+  transports           String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, credentialID])
+}
+
+enum UserRole {
+  ADMIN
+  MANAGER
+  STAFF
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PROCESSING
+  PRINTING
+  FINISHING
+  COMPLETED
+  CANCELLED
+  ON_HOLD
+}
+
+enum PaymentMethod {
+  CASH
+  BANK_TRANSFER
+  OVERRIDES
+  E_WALLET
+  CARD
+}
+
+enum PaymentType {
+  DP
+  FINAL
+  INSTALLMENT
+  REFUND
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+enum ProductionStatus {
+  WAITING
+  IN_PROGRESS
+  PAUSED
+  FINISHED
+  DELIVERED
+  CANCELED
+}
+
+model Customer {
+  id        String    @id @default(cuid())
+  name      String
+  phone     String?
+  email     String?   @unique
+  address   String?
+  notes     String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  orders    Order[]
+}
+
+model Order {
+  id             String          @id @default(cuid())
+  orderNumber    String          @unique
+  customerId     String
+  customer       Customer        @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  createdById    String?
+  createdBy      User?           @relation("OrderCreatedBy", fields: [createdById], references: [id])
+  handledById    String?
+  handledBy      User?           @relation("OrderHandledBy", fields: [handledById], references: [id])
+  notes          String?
+  totalAmount    Int
+  shippingFee    Int?
+  discountAmount Int?
+  paymentMethod  String?
+  noPayment      BigInt?
+  status         OrderStatus     @default(PENDING)
+  productionDue  DateTime?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  canceledAt     DateTime?
+  items          OrderItem[]
+  payments      Payment[]
+  designs        Design[]
+  logs           OrderLog[]
+
+  @@index([customerId])
+  @@index([status])
+}
+
+model OrderItem {
+  id         String     @id @default(cuid())
+  orderId    String
+  order      Order      @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product    String
+  sku        String?
+  quantity   Int        @default(1)
+  unitPrice  Int
+  subtotal   Int
+  costPrice  Int?
+  costTotal  Int?
+  size       String?
+  color      String?
+  notes      String?
+  printArea  Int?
+  printAreas String?
+  colorCount Int?       @default(1)
+  production Production?
+  provit     ProfitLog[]
+  products   Product @relation(fields: [product], references: [id])
+  createdAt  DateTime   @default(now())
+
+  @@index([orderId])
+}
+
+model Design {
+  id          String    @id @default(cuid())
+  orderId     String
+  order       Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  filename    String
+  fileUrl     String
+  previewUrl  String?
+  sizeKb      Int?
+  uploadedBy  String?
+  uploader    User?     @relation(fields: [uploadedBy], references: [id])
+  notes       String?
+  createdAt   DateTime  @default(now())
+
+  @@index([orderId])
+}
+
+model Payment {
+  id           String    @id @default(cuid())
+  orderId      String
+  order        Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  amount       Int
+  amountReturn Int?
+  methodId     String
+
+  method       PaymentMethods @relation(fields: [methodId], references: [id])
+  type         PaymentType
+  status       PaymentStatus @default(PENDING)
+  reference    String
+  filename     String
+  paidAt       DateTime?
+  notes        String?
+  processedBy  String?
+  processor    User?     @relation(fields: [processedBy], references: [id])
+  createdAt    DateTime  @default(now())
+
+  @@index([orderId])
+}
+
+model PaymentMethods {
+  id          String    @id @default(cuid())
+  name        String    @unique
+  no          BigInt?
+  description String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  payments    Payment[]
+}
+
+model OrderLog {
+  id         String       @id @default(cuid())
+  orderId    String
+  order      Order        @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  actorId    String?
+  actor      User?        @relation(fields: [actorId], references: [id])
+  fromStatus OrderStatus?
+  toStatus   OrderStatus?
+  note       String?
+  createdAt  DateTime     @default(now())
+
+  @@index([orderId])
+}
+model SablonType {
+  id             String       @id @default(cuid())
+  name           String       @unique
+  description    String?
+  basePrice      Int
+  pricePerColor  Int?
+  pricePerArea   Int?
+  baseCost       Int?
+  costPerColor   Int?
+  costPerArea    Int?
+  notes          String?
+  isActive       Boolean      @default(true)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  production     Production[]
+
+  @@index([isActive])
+}
+
+model Production {
+  id             String        @id @default(cuid())
+  orderItemId    String        @unique
+  orderItem      OrderItem     @relation(fields: [orderItemId], references: [id], onDelete: Cascade)
+  assignedToId   String?
+  assignedTo     User?         @relation(fields: [assignedToId], references: [id])
+  sablonTypeId   String?
+  sablonType     SablonType?   @relation(fields: [sablonTypeId], references: [id], onDelete: Cascade)
+  startDate      DateTime?
+  endDate        DateTime?
+  progress       Int?          @default(0)
+  status         ProductionStatus @default(WAITING)
+  notes          String?
+  filename       String?
+  fileProofUrl   String?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+}
+
+model Site {
+  id          String   @id @default(cuid())
+  name        String
+  filename    String?
+  fileProofUrl String?
+  phone       String?
+  email       String?
+  address     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Product {
+  id           String   @id @default(cuid())
+  name         String
+  sku          String   @unique
+  fileName     String?
+  fileUrl      String?
+  color        String?
+  size         String?
+  purchaseCost Int
+  sellingPrice Int?
+  stok         Int @default(1)
+  notes        String?
+  orderItems   OrderItem[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model ProfitLog {
+  id           String    @id @default(cuid())
+  orderItemId  String
+  orderItem    OrderItem @relation(fields: [orderItemId], references: [id])
+  revenue      Int
+  cost         Int
+  profit       Int
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Size {
+  id        String   @id @default(cuid())
+  name      String
+  chest     Int?
+  length    Int?
+  sleeve    Int?
+  note      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Invoice {
+  id            String   @id @default(cuid())
+  invoiceNumber String   @unique
+  customerName  String
+  amount        Int
+  createdAt     DateTime @default(now())
+}

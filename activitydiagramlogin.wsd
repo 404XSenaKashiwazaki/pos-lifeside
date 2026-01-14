@@ -1,0 +1,17 @@
+@startuml
+start
+
+repeat
+    :User membuka aplikasi;
+    :Login;
+
+    if (Login valid?) then (Ya)
+        :Tampilkan Dashboard;
+        stop
+    else (Tidak)
+        :Tampilkan error login;
+    endif
+
+repeat while (Login Gagal?) is (Ya)
+
+@enduml

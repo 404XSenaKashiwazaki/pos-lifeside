@@ -1,0 +1,71 @@
+@startuml
+left to right direction
+
+actor Admin
+actor Staff
+actor Manager
+
+rectangle  {
+
+  usecase "Login" as Login
+
+  usecase "Kelola Data Produk" as U1
+  usecase "Kelola Data Ukuran Produk" as U2
+  usecase "Kelola Data Pemesanan" as U3
+  usecase "Kelola Data Pembayaran" as U4
+  usecase "Kelola Metode Pembayaran" as U5
+  usecase "Kelola Data Produksi" as U6
+  usecase "Kelola Data Pelanggan" as U7
+  usecase "Kelola Harga & Jenis" as U8
+  usecase "Kelola Data User" as U9
+  usecase "Pengaturan Profil" as U10
+  usecase "Pengaturan Situs" as U11
+}
+
+' ===== ADMIN =====
+Admin --> U1
+Admin --> U2
+Admin --> U3
+Admin --> U4
+Admin --> U5
+Admin --> U6
+Admin --> U7
+Admin --> U8
+Admin --> U9
+Admin --> U10
+Admin --> U11
+
+' ===== STAFF =====
+Staff --> U1
+Staff --> U2
+Staff --> U3
+Staff --> U4
+Staff --> U6
+Staff --> U7
+Staff --> U8
+Staff --> U10
+
+' ===== MANAGER =====
+Manager --> U3
+Manager --> U4
+Manager --> U5
+Manager --> U7
+Manager --> U8
+Manager --> U9
+Manager --> U10
+Manager --> U11
+
+' ===== LOGIN SEBAGAI PRASYARAT =====
+U1 ..> Login : <<include>>
+U2 ..> Login : <<include>>
+U3 ..> Login : <<include>>
+U4 ..> Login : <<include>>
+U5 ..> Login : <<include>>
+U6 ..> Login : <<include>>
+U7 ..> Login : <<include>>
+U8 ..> Login : <<include>>
+U9 ..> Login : <<include>>
+U10 ..> Login : <<include>>
+U11 ..> Login : <<include>>
+
+@enduml

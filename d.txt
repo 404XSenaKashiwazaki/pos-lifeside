@@ -1,0 +1,27 @@
+totalAmount (harga jual) = Rp 150.000
+costPrice (modal) = Rp 52.000
+profit = 150.000 – 52.000 = Rp 98.000
+
+
+totalAmount = harga jual (apa yang customer bayar)
+
+Ditentukan oleh kamu / admin. Bisa markup berapa pun.
+
+costPrice = harga modal (HPP: biaya bahan + biaya sablon)
+
+Harus tetap / objektif, berasal dari data biaya.
+
+purchaseCost harga modal
+  sellingPrice Harga jual
+
+
+note pr:
+status belum otomatis berkurang ketika order /edit page
+dashboard - laporan profit belum ada
+laporan -laporan cetak berdasarkan array id dan status
+
+-form pembayaran belum ok ada validasi yang harus di perbaiki
+-detail pembayaran - bleum ada metode umtuk no transfer
+-form fprm pembayaran ketika update tgl berkurang 1 hari /20 nov 2025 update 19 nov 2025
+-laporan -laporan profit belum ada
+- dashboard - laporan profit belum ada
