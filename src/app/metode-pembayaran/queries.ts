@@ -9,7 +9,11 @@ export const getPaymentMethods = async (): Promise<
   Response<PaymentMethods[]>
 > => {
   try {
-    const res = await prisma.paymentMethods.findMany();
+    const res = await prisma.paymentMethods.findMany({
+       orderBy: {
+        id: "desc"
+      }
+    });
     if (!res)
       return sendResponse({
         success: false,

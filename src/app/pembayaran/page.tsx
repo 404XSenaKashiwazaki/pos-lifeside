@@ -22,7 +22,7 @@ const Page = async () => {
         },
       },
       payments: true,
-    },
+    }, 
   });
 
   const { data: payments } = await getPaymentMethods();

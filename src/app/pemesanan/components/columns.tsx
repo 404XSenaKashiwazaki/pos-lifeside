@@ -222,7 +222,7 @@ export const columns = ({
       const product = row.original.items[0].products.name;
       const imageUrl = row.original.designs[0].fileUrl;
       return (
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 max-w-[200px]">
           <Image
             src={imageUrl ?? ""}
             className="w-10  h-10"
@@ -231,7 +231,7 @@ export const columns = ({
             priority
             alt={product}
           />
-          <span className="font-medium">{product ?? "-"}</span>
+          <span className="font-normal break-words whitespace-normal leading-snug">{product ?? "-"}</span>
         </div>
       );
     },

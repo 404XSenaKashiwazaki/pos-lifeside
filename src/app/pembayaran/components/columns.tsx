@@ -209,7 +209,7 @@ export const columns = ({
           const product = row.original.order.items[0].products.name
           const imageUrl = row.original.order.designs[0].fileUrl
           return (
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 max-w-[200px]">
               <Image
                 src={imageUrl ?? ""}
                 className="w-10  h-10"
@@ -218,7 +218,7 @@ export const columns = ({
                 priority
                 alt={product}
               />
-              <span className="font-medium">{product ?? "-"}</span>
+              <span className="font-normal break-words whitespace-normal leading-snug">{product ?? "-"}</span>
             </div>
           );
         },
@@ -267,6 +267,23 @@ export const columns = ({
     },
   },
   {
+    accessorKey: "totalAmount",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Tagihan
+          <ArrowUpDown />
+        </Button>
+      );
+    },
+    cell: ({ row }) => (
+      <div className="">{formatCurrency(row.original.order.totalAmount ?? 0)}</div>
+    ),
+  },
+  {
     accessorKey: "amount",
     header: ({ column }) => {
       return (
@@ -274,7 +291,7 @@ export const columns = ({
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Total
+          Total bayar
           <ArrowUpDown />
         </Button>
       );
@@ -283,6 +300,24 @@ export const columns = ({
       <div className="">{formatCurrency(row.getValue("amount"))}</div>
     ),
   },
+  {
+    accessorKey: "amountReturn",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Kembalian 
+          <ArrowUpDown />
+        </Button>
+      );
+    },
+    cell: ({ row }) => (
+      <div className="">{formatCurrency(row.original.amountReturn ?? 0)}</div>
+    ),
+  },
+
   {
     id: "actions",
     header: () => <div>Action</div>,

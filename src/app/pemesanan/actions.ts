@@ -83,7 +83,7 @@ export const addOrder = async (
     totalAmount: data.totalAmount,
     unitPrice: data.unitPrice,
   });
-
+const sablonPerUnit = costAndProfit.costTotal / (data.quantity ?? 1)
   try {
     const order = await prisma.order.create({
       data: {
@@ -101,7 +101,7 @@ export const addOrder = async (
         items: {
           create: {
             product: data.product,
-            subtotal: data.unitPrice * (data.quantity ?? 1),
+            subtotal:(data.unitPrice + sablonPerUnit) * (data.quantity ?? 1),
             unitPrice: data.unitPrice,
             color: data.color,
             notes: data.notes,
@@ -144,14 +144,24 @@ export const addOrder = async (
       },
     });
 
+    // const orderItems = await prisma.orderItem.findMany({
+    //   where: { orderId: order.id },
+    // });
+
+    // const orderSubtotal = orderItems.reduce((sum, i) => sum + i.subtotal, 0);
+
+    // const finalTotal =
+    //   orderSubtotal + (data.shippingFee || 0) - (data.discountAmount || 0);
+
     const orderItems = await prisma.orderItem.findMany({
-      where: { orderId: order.id },
-    });
+  where: { orderId: order.id },
+});
 
-    const orderSubtotal = orderItems.reduce((sum, i) => sum + i.subtotal, 0);
+const orderSubtotal = orderItems.reduce((sum, i) => sum + i.subtotal, 0);
 
-    const finalTotal =
-      orderSubtotal + (data.shippingFee || 0) - (data.discountAmount || 0);
+const finalTotal =
+  orderSubtotal + (data.shippingFee || 0) - (data.discountAmount || 0);
+
 
     await prisma.order.update({
       where: {
@@ -169,7 +179,6 @@ export const addOrder = async (
       message: "Menambahkan data pemesanan",
     });
   } catch (error) {
-
     const filePath = getFilePath(fileUrl);
     if (
       file &&
@@ -273,6 +282,14 @@ export const updateOrder = async (
     unitPrice: data.unitPrice,
   });
 
+ const printTotal =
+  ((sablonType?.baseCost ?? 0) +
+   (sablonType?.pricePerColor ?? 0) * data.colorCount) *
+  (data.quantity ?? 1);
+  const itemSubtotal =
+  (data.unitPrice * (data.quantity ?? 1)) + printTotal;
+  const orderSubtotal = itemSubtotal
+
   try {
     const difference = data.quantity ?? 1 - dataInDb.items[0].quantity;
 
@@ -310,12 +327,15 @@ export const updateOrder = async (
           stok: { increment: Math.abs(difference) },
         },
       });
+
+
+
     await prisma.$transaction([
       prisma.order.update({
         data: {
           customerId: data.customerId,
           orderNumber: data.orderNumber,
-          totalAmount: data.totalAmount,
+          // totalAmount: data.totalAmount,
           createdAt: data.createdAt,
           createdById: currentLogin?.user.id,
           notes: data.notes,
@@ -340,7 +360,7 @@ export const updateOrder = async (
               where: { id: dataInDb.items[0].id },
               data: {
                 product: data.product,
-                subtotal: data.totalAmount,
+                subtotal: itemSubtotal,
                 unitPrice: data.unitPrice,
                 color: data.color,
                 notes: data.notes,
@@ -372,7 +392,8 @@ export const updateOrder = async (
       }),
     ]);
 
-    const orderSubtotal = dataInDb.items[0].subtotal;
+    // const orderSubtotal = dataInDb.items[0].subtotal;
+    
 
     const finalTotal =
       orderSubtotal + (data.shippingFee || 0) - (data.discountAmount || 0);

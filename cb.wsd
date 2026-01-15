@@ -1,0 +1,44 @@
+@startuml
+title Sequence Diagram Proses Pemesanan
+
+actor User
+participant "Halaman Produk" as Produk
+participant "Keranjang" as Cart
+participant "Order Controller" as Order
+participant "Database" as DB
+participant "Halaman Pesanan" as Pesanan
+participant "Detail Pesanan" as Detail
+
+User -> Produk : Pilih Produk
+User -> Cart : Tambah ke Keranjang
+Cart -> Cart : Simpan Item Sementara
+
+User -> Cart : Lihat Keranjang
+User -> Cart : Klik Checkout
+
+Cart -> Order : Kirim Data Pesanan
+Order -> DB : Simpan Order
+DB --> Order : Order ID
+
+Order -> DB : Simpan Detail Item
+DB --> Order : Berhasil
+
+Order -> Pesanan : Tampilkan Daftar Pesanan
+Pesanan -> User : Lihat Status (Pending)
+
+User -> Pesanan : Klik Detail
+Pesanan -> Detail : Ambil Data Pesanan
+Detail -> DB : Query Detail Order
+DB --> Detail : Data Pesanan
+Detail --> User : Tampilkan Detail & Tombol Bayar
+
+alt "User Klik Bayar"
+    User -> Order : Proses Pembayaran
+    Order -> DB : Update Status = Dibayar
+    DB --> Order : OK
+    Order -> Detail : Tampilkan Status Berhasil
+else "Belum Bayar"
+    Detail --> User : Status Tetap Pending
+end
+
+@enduml

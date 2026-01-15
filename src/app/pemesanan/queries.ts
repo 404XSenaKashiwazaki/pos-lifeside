@@ -20,7 +20,9 @@ export const getOrders = async (): Promise<
         },
         customer: true,
         designs: true,
-      },
+      },orderBy: {
+        id: "desc"
+      }
     });
 
     if (!res)

@@ -157,6 +157,8 @@ export const updatePayment = async (
     }
   }
 
+  console.log({kembalian: data.amountReturn});
+  
   try {
     await prisma.payment.update({
       data: {

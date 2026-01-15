@@ -23,7 +23,9 @@ export const getPayments = async (): Promise<
             },
           },
         },
-      },
+      }, orderBy:{
+        id: "desc"
+      }
     });
     if (!res)
       return sendResponse({

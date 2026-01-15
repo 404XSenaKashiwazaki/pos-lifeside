@@ -33,7 +33,7 @@ export const getDashboards = async (): Promise<Response<Dashboards>> => {
     // 🔹 Hitung statistik
     const totalRevenue = payments
       .filter((p) => p.status === "PAID")
-      .reduce((sum, p) => sum + Number(p.amount), 0);
+      .reduce((sum, p) => sum + (Number(p.amount) - Number(p.amountReturn)), 0);
 
     const totalNotPaid = notPaids.length;
     const totalOrders = orders.length;

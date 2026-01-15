@@ -89,11 +89,11 @@ const CellAction = ({ row, handle, sablon }: CellActionProps) => {
 
   return (
     <div className="flex gap-1 flex-col md:flex-row w">
-      <Button variant="outline" size={"sm"} onClick={() => showModalDetail()}>
+      <Button variant="outline"  size={"sm"} onClick={() => showModalDetail()}>
         <SearchCheck />
         Detail
       </Button>
-      <Button variant="default" size={"sm"} onClick={() => showModalEdit()}>
+      <Button variant="default" disabled={row.original.orderItem.order.status == "PENDING"} size={"sm"} onClick={() => showModalEdit()}>
         <Edit2Icon />
         Edit
       </Button>

@@ -7,7 +7,11 @@ import { SablonType } from "@prisma/client";
 
 export const getHargaJenis = async (): Promise<Response<SablonType[]>> => {
   try {
-    const res = await prisma.sablonType.findMany();
+    const res = await prisma.sablonType.findMany({
+      orderBy: {
+        id: "desc"
+      }
+    });
     if (!res)
       return sendResponse({
         success: false,

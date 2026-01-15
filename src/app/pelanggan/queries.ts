@@ -7,7 +7,11 @@ import { Customer } from "@prisma/client";
 
 export const getCustomers = async (): Promise<Response<Customer[]>> => {
   try {
-    const res = await prisma.customer.findMany();
+    const res = await prisma.customer.findMany({
+       orderBy: {
+        id: "desc"
+      }
+    });
     if (!res)
       return sendResponse({
         success: false,

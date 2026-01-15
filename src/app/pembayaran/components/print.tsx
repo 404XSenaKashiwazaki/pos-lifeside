@@ -263,7 +263,9 @@ const PaymentsPrint: React.FC<PaymentsPrintProps> = ({
               </span>
               <span className="font-xs text-primary  w-full  flex items-start gap-1">
                 <p>:</p>
-                <p> {formatCurrency(data.order.items[0].subtotal ?? 0)}</p>
+                {/* <p> {formatCurrency(data.order.items[0].subtotal ?? 0)}</p>
+                 */}
+                <p> {formatCurrency(data.order.totalAmount ?? 0)}</p>
               </span>
             </div>
             <div className="flex flex-row gap-1  justify-between items-start text-sm">

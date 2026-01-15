@@ -119,6 +119,15 @@ const DetailPage: React.FC<DetailPageProps> = ({ id }) => {
           </div>
           <div className="flex flex-col sm:flex-row gap-1 items-center justify-between text-sm ">
             <span className="flex items-center gap-1 text-muted-foreground  w-full">
+              Total Tagihan
+            </span>
+            <span className="font-xs text-primary  w-full  flex items-start gap-1">
+              <p>:</p>
+              <p>{formatCurrency(data.order.totalAmount)}</p>
+            </span>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-1 items-center justify-between text-sm ">
+            <span className="flex items-center gap-1 text-muted-foreground  w-full">
               Total Pembayaran
             </span>
             <span className="font-xs text-primary  w-full  flex items-start gap-1">

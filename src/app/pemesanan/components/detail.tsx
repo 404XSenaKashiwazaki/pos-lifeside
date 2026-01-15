@@ -201,22 +201,69 @@ const DetailPage = ({ id }: DetailPembelianProps) => {
               </p>
             </span>
           </div>
+
           <div className="flex flex-col sm:flex-row gap-1 items-center justify-between text-sm ">
             <span className="flex items-center gap-1 text-muted-foreground  w-full">
-              Sub Total Pemesanan-Pengiriman-diskon
+              Area Cetak
             </span>
             <span className="font-xs text-primary  w-full  flex items-start gap-1">
               <p>:</p>
-              <p>{formatCurrency(data.totalAmount)}</p>
+              <p>{data.items[0].printAreas}</p>
             </span>
           </div>
           <div className="flex flex-col sm:flex-row gap-1 items-center justify-between text-sm ">
             <span className="flex items-center gap-1 text-muted-foreground  w-full">
-              Biaya Pengiriman
+              Jumlah Warna
             </span>
             <span className="font-xs text-primary  w-full  flex items-start gap-1">
               <p>:</p>
-              <p>{formatCurrency(data.shippingFee ?? 0)}</p>
+              <p>{data.items[0].colorCount}</p>
+            </span>
+          </div>
+ <div className="flex flex-col sm:flex-row gap-1 items-center justify-between text-sm ">
+            <span className="flex items-center gap-1 text-muted-foreground  w-full">
+              Harga satuan
+            </span>
+            <span className="font-xs text-primary  w-full  flex items-start gap-1">
+              <p>:</p>
+              <p>{formatCurrency(data.items[0].unitPrice)}</p>
+            </span>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-1 items-center justify-between text-sm ">
+            <span className="flex items-center gap-1 text-muted-foreground  w-full">
+              Harga Biaya
+            </span>
+            <span className="font-xs text-primary  w-full  flex items-start gap-1">
+              <p>:</p>
+              <p>{formatCurrency(data.items[0].costPrice ?? 0)}</p>
+            </span>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-1 items-center justify-between text-sm ">
+            <span className="flex items-center gap-1 text-muted-foreground  w-full">
+              Jumlah Biaya
+            </span>
+            <span className="font-xs text-primary  w-full  flex items-start gap-1">
+              <p>:</p>
+              <p>{formatCurrency(data.items[0].costTotal ?? 0)}</p>
+            </span>
+          </div>
+         
+          <div className="flex flex-col sm:flex-row gap-1 items-center justify-between text-sm ">
+            <span className="flex items-center gap-1 text-muted-foreground  w-full">
+              Jumlah QTY
+            </span>
+            <span className="font-xs text-primary  w-full  flex items-start gap-1">
+              <p>:</p>
+              <p>{data.items[0].quantity}</p>
+            </span>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-1 items-center justify-between text-sm ">
+            <span className="flex items-center gap-1 text-muted-foreground  w-full">
+              Sub Total
+            </span>
+            <span className="font-xs text-primary  w-full  flex items-start gap-1">
+              <p>:</p>
+              <p>{formatCurrency(data.items[0].subtotal ?? 0)}</p>
             </span>
           </div>
           <div className="flex flex-col sm:flex-row gap-1 items-center justify-between text-sm ">
@@ -230,65 +277,20 @@ const DetailPage = ({ id }: DetailPembelianProps) => {
           </div>
           <div className="flex flex-col sm:flex-row gap-1 items-center justify-between text-sm ">
             <span className="flex items-center gap-1 text-muted-foreground  w-full">
-              Jumlah
+              Biaya Pengiriman
             </span>
             <span className="font-xs text-primary  w-full  flex items-start gap-1">
               <p>:</p>
-              <p>{data.items[0].quantity}</p>
+              <p>{formatCurrency(data.shippingFee ?? 0)}</p>
             </span>
           </div>
           <div className="flex flex-col sm:flex-row gap-1 items-center justify-between text-sm ">
             <span className="flex items-center gap-1 text-muted-foreground  w-full">
-              Area Cetak
+              Sub Total Pemesanan-Pengiriman-diskon
             </span>
             <span className="font-xs text-primary  w-full  flex items-start gap-1">
               <p>:</p>
-              <p>{data.items[0].printAreas}</p>
-            </span>
-          </div>
-          <div className="flex flex-col sm:flex-row gap-1 items-center justify-between text-sm ">
-            <span className="flex items-center gap-1 text-muted-foreground  w-full">
-              Color Count
-            </span>
-            <span className="font-xs text-primary  w-full  flex items-start gap-1">
-              <p>:</p>
-              <p>{data.items[0].colorCount}</p>
-            </span>
-          </div>
-          <div className="flex flex-col sm:flex-row gap-1 items-center justify-between text-sm ">
-            <span className="flex items-center gap-1 text-muted-foreground  w-full">
-              Unit Price
-            </span>
-            <span className="font-xs text-primary  w-full  flex items-start gap-1">
-              <p>:</p>
-              <p>{formatCurrency(data.items[0].unitPrice)}</p>
-            </span>
-          </div>
-          <div className="flex flex-col sm:flex-row gap-1 items-center justify-between text-sm ">
-            <span className="flex items-center gap-1 text-muted-foreground  w-full">
-              Cost Price
-            </span>
-            <span className="font-xs text-primary  w-full  flex items-start gap-1">
-              <p>:</p>
-              <p>{formatCurrency(data.items[0].costPrice ?? 0)}</p>
-            </span>
-          </div>
-          <div className="flex flex-col sm:flex-row gap-1 items-center justify-between text-sm ">
-            <span className="flex items-center gap-1 text-muted-foreground  w-full">
-              Cost Total
-            </span>
-            <span className="font-xs text-primary  w-full  flex items-start gap-1">
-              <p>:</p>
-              <p>{formatCurrency(data.items[0].costTotal ?? 0)}</p>
-            </span>
-          </div>
-          <div className="flex flex-col sm:flex-row gap-1 items-center justify-between text-sm ">
-            <span className="flex items-center gap-1 text-muted-foreground  w-full">
-              Sub Total
-            </span>
-            <span className="font-xs text-primary  w-full  flex items-start gap-1">
-              <p>:</p>
-              <p>{formatCurrency(data.items[0].subtotal ?? 0)}</p>
+              <p>{formatCurrency(data.totalAmount)}</p>
             </span>
           </div>
 

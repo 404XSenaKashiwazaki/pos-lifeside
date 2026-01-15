@@ -88,7 +88,6 @@ const FormPage = ({
   amountReturn,
   orderAmount,
 }: Partial<z.infer<typeof formPaymentSchema>> & FormOrderProps) => {
-
   const [remainingPayment, setRemainingPayment] = useState<
     number | string | null
   >(null);
@@ -153,7 +152,7 @@ const FormPage = ({
     formData.append("status", values.status);
     formData.append("reference", values.reference);
     formData.append("notes", values.notes ?? "");
-    formData.append("amountReturn", JSON.stringify(values.amountReturn));
+    formData.append("amountReturn", JSON.stringify(change));
 
     try {
       setLoading(true);
@@ -176,7 +175,6 @@ const FormPage = ({
     }
   };
 
-
   const findCustomerProduct = (id: string) =>
     orders.find((e) => String(e.id) === id);
 
@@ -196,6 +194,25 @@ const FormPage = ({
       setDataOrders(orders.filter((e) => e.id === id));
     }
   }, [id, orders]);
+
+  useEffect(() => {
+    if (id && paymentTotal && totalAmount) {
+      const bayar = Number(totalAmount);
+      const tagihan = Number(paymentTotal);
+
+      if (bayar > tagihan) {
+        setChange(bayar - tagihan);
+        setRemainingPayment(0);
+      } else if (bayar === tagihan) {
+        setChange(0);
+        setRemainingPayment(0);
+      } else {
+        setChange(0);
+        setRemainingPayment(tagihan - bayar);
+      }
+    }
+  }, [id, paymentTotal, totalAmount]);
+
 
   return (
     <div className="w-full">

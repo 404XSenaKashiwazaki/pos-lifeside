@@ -24,6 +24,9 @@ export const getProductions = async (): Promise<
         assignedTo: true,
         sablonType: true,
       },
+      orderBy: {
+        id: "desc",
+      },
     });
     if (!res)
       return sendResponse({
@@ -86,5 +89,3 @@ export const getProductionById = async (
     });
   }
 };
-
-
