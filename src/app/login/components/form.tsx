@@ -14,6 +14,7 @@ import { GalleryVerticalEnd } from "lucide-react";
 import { useSite } from "@/components/providers/Site-provider";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
+import Image from "next/image";
 
 const Form = () => {
   const site = useSite();
@@ -25,7 +26,14 @@ const Form = () => {
       <div className="w-full max-w-sm flex flex-col gap-5">
         <a className="flex items-center gap-2 self-center font-medium">
           <div className="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">
-            <GalleryVerticalEnd className="size-4" />
+            { site?.fileProofUrl ? <Image
+              src={site?.fileProofUrl ?? ""}
+              alt="sfasg"
+              width={100}
+              height={100}
+              priority
+              className="w-6 h-6 rounded-sm"
+            /> : <GalleryVerticalEnd className="size-4" />}
           </div>
           {site?.name ?? process.env.NEXT_PUBLIC_APP_NAME}
         </a>
